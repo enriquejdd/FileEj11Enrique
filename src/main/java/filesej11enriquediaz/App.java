@@ -6,7 +6,6 @@
 package filesej11enriquediaz;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -25,6 +24,7 @@ public class App {
     private LocalDate fecCreacion;
 
     public App() {
+        codigo++;
     }
 
     public App(int codigo, String nombre, String descripcion, Double tamanioKB, LocalDate fecCreacion) {
@@ -33,6 +33,7 @@ public class App {
         this.descripcion = descripcion;
         this.tamanioKB = tamanioKB;
         this.fecCreacion = fecCreacion;
+        codigo++;
     }
 
     public LocalDate getFecCreacion() {
@@ -88,20 +89,22 @@ public class App {
         return aleatorio + "\t" + codigo + "\t" + nombre + "\t" + descripcion + "\t" + tamanioKB + "\t" + fecCreacion;
     }
 
-    public void crearAppAleatoria() {
-        App appAleatoria = new App();
-        int contador = 0;
+    // Método para crear app aleatorias.
+    public App crearAppAleatoria() {        
+        int contador = codigo;
         String abecedario = "abcdefghijklmnopqrstuvwxyz";
         int numLetraAbec = aleatorio.nextInt(abecedario.length());
         String nomb = "app" + contador + abecedario.charAt(numLetraAbec);
         String descripcionApp = descripcionAleatorio();
-        int tamanio1 = aleatorio.nextInt(1024) + 100;
-        Double tamanio2 = aleatorio.nextDouble();
-        
+        Double tamanioFinal = aleatorio.doubles(1, 100.0, 1024.0).sum();        
         LocalDate fecAleatoria = fechasAleatorias();
 
+        App appAleatoria = new App(contador,nomb,descripcionApp,tamanioFinal,fecAleatoria);
+        
+        return appAleatoria;
     }
 
+    // Método para que escoja devuelva aleatoriamente uno de los string del arrayList.
     public String descripcionAleatorio() {
         ArrayList<String> descripciones = new ArrayList<>();
         descripciones.add("Aplicacion de Desarrollo");
@@ -119,10 +122,14 @@ public class App {
         return descripcionApp;
     }
 
+    // Método que crea fechas aleatorios
     public LocalDate fechasAleatorias() {
-        int año = aleatorio.nextInt(2022 + 1995 - 1995);
+        // Obtener un número entre las 30 siguientes iteraciones a 1995
+        int año = aleatorio.nextInt(30)+1995;
+        // Obtener un valor de 1 al 12
         int mes = aleatorio.nextInt(12) + 1;
         int dia = 0;
+        // Creamos un switch para que dependiendo del mes pueda tener más o menso días
         switch (mes) {
             case 1:
             case 3:
