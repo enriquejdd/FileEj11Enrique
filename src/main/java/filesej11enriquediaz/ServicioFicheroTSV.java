@@ -5,6 +5,9 @@
  */
 package filesej11enriquediaz;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -12,28 +15,37 @@ import java.util.ArrayList;
  * @author Enrique
  */
 public class ServicioFicheroTSV {
-    public void crearArchivo(ArrayList<App> a, String rutaYNombreArchivo){
-        
+
+    public static void crearArchivosTSV(ArrayList<App> arrayListApps, String rutaYNombreArchivo) { 
+
+        try (BufferedWriter flujo = new BufferedWriter(new FileWriter(rutaYNombreArchivo))) {
+            String respuesta = "";
+            for (int i = 0; i < arrayListApps.size(); i++) {
+                respuesta = arrayListApps.get(i).toString();
+                flujo.write(respuesta);
+                flujo.newLine();
+            }
+            
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
-    
-    public ArrayList<App> crearListaApps(int numeroApps){
+
+    public static ArrayList<App> crearListaAppsTSV(int numeroApps) {
         ArrayList<App> listaAplicaciones = new ArrayList<>();
         for (int i = 0; i < numeroApps; i++) {
-            App appNueva = new App();            
-            listaAplicaciones.add(appNueva.crearAppAleatoria());
+            listaAplicaciones.add(App.crearAppAleatoria());
         }
         return listaAplicaciones;
     }
-    
-    // PRueba de funcionamiento
+
+    // Prueba de funcionamiento
 //    public static void main(String[] args) {
+//        String destinoArchivo = "./ficheroTSV.tsv";
 //        int numeroApps = 15;
-//        ArrayList<App> listaAplicaciones = new ArrayList<>();
-//        for (int i = 0; i < numeroApps; i++) {
-//            App appNueva = new App();            
-//            listaAplicaciones.add(appNueva.crearAppAleatoria());
-//        }
+//        ArrayList<App> listaAplicaciones = crearListaAppsTSV(numeroApps);
 //        
-//        listaAplicaciones.forEach(System.out::println);
+////        listaAplicaciones.forEach(System.out::println);
+//        crearArchivosTSV(listaAplicaciones, destinoArchivo);
 //    }
 }

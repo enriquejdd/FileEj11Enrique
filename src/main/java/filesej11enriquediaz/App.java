@@ -7,6 +7,7 @@ package filesej11enriquediaz;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -15,7 +16,8 @@ import java.util.Random;
  */
 public class App {
 
-    private Random aleatorio = new Random();
+    private final static Random aleatorio = new Random();
+    private static int contador = 0;
 
     private int codigo;
     private String nombre;
@@ -24,7 +26,7 @@ public class App {
     private LocalDate fecCreacion;
 
     public App() {
-        codigo++;
+        contador++;
     }
 
     public App(int codigo, String nombre, String descripcion, Double tamanioKB, LocalDate fecCreacion) {
@@ -33,7 +35,7 @@ public class App {
         this.descripcion = descripcion;
         this.tamanioKB = tamanioKB;
         this.fecCreacion = fecCreacion;
-        codigo++;
+        contador++;
     }
 
     public LocalDate getFecCreacion() {
@@ -42,14 +44,6 @@ public class App {
 
     public void setFecCreacion(LocalDate fecCreacion) {
         this.fecCreacion = fecCreacion;
-    }
-
-    public Random getAleatorio() {
-        return aleatorio;
-    }
-
-    public void setAleatorio(Random aleatorio) {
-        this.aleatorio = aleatorio;
     }
 
     public int getCodigo() {
@@ -86,26 +80,66 @@ public class App {
 
     @Override
     public String toString() {
-        return aleatorio + "\t" + codigo + "\t" + nombre + "\t" + descripcion + "\t" + tamanioKB + "\t" + fecCreacion;
+        return nombre + "\t" + descripcion + "\t" + tamanioKB + "\t" + fecCreacion;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 79 * hash + this.codigo;
+        hash = 79 * hash + Objects.hashCode(this.nombre);
+        hash = 79 * hash + Objects.hashCode(this.descripcion);
+        hash = 79 * hash + Objects.hashCode(this.tamanioKB);
+        hash = 79 * hash + Objects.hashCode(this.fecCreacion);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final App other = (App) obj;
+        if (this.codigo != other.codigo) {
+            return false;
+        }
+        if (!Objects.equals(this.nombre, other.nombre)) {
+            return false;
+        }
+        if (!Objects.equals(this.descripcion, other.descripcion)) {
+            return false;
+        }
+        if (!Objects.equals(this.tamanioKB, other.tamanioKB)) {
+            return false;
+        }
+        if (!Objects.equals(this.fecCreacion, other.fecCreacion)) {
+            return false;
+        }
+        return true;
     }
 
     // Método para crear app aleatorias.
-    public App crearAppAleatoria() {        
-        int contador = codigo;
+    public static App crearAppAleatoria() {
         String abecedario = "abcdefghijklmnopqrstuvwxyz";
         int numLetraAbec = aleatorio.nextInt(abecedario.length());
         String nomb = "app" + contador + abecedario.charAt(numLetraAbec);
         String descripcionApp = descripcionAleatorio();
-        Double tamanioFinal = aleatorio.doubles(1, 100.0, 1024.0).sum();        
+        Double tamanioFinal = aleatorio.doubles(1, 100.0, 1024.0).sum();
         LocalDate fecAleatoria = fechasAleatorias();
 
-        App appAleatoria = new App(contador,nomb,descripcionApp,tamanioFinal,fecAleatoria);
-        
+        App appAleatoria = new App(contador, nomb, descripcionApp, tamanioFinal, fecAleatoria);
+
         return appAleatoria;
     }
 
     // Método para que escoja devuelva aleatoriamente uno de los string del arrayList.
-    public String descripcionAleatorio() {
+    public static String descripcionAleatorio() {
         ArrayList<String> descripciones = new ArrayList<>();
         descripciones.add("Aplicacion de Desarrollo");
         descripciones.add("Aplicacion de Cuentas");
@@ -123,9 +157,9 @@ public class App {
     }
 
     // Método que crea fechas aleatorios
-    public LocalDate fechasAleatorias() {
+    public static LocalDate fechasAleatorias() {
         // Obtener un número entre las 30 siguientes iteraciones a 1995
-        int año = aleatorio.nextInt(30)+1995;
+        int año = aleatorio.nextInt(30) + 1995;
         // Obtener un valor de 1 al 12
         int mes = aleatorio.nextInt(12) + 1;
         int dia = 0;
