@@ -10,6 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.PropertyException;
 
 /**
  *
@@ -17,7 +19,7 @@ import java.util.ArrayList;
  */
 public class Programa {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, PropertyException, JAXBException {
         int numeroApps = 50;
 
         System.out.println("Creamos las listas de aplicaciones");
@@ -26,6 +28,9 @@ public class Programa {
         for (int i = 0; i < numeroApps; i++) {
             listaApps.add(App.crearAppAleatoria());
         }
+        System.out.println("Enseñamos los valores de la lista");
+        System.out.println("");
+        listaApps.forEach(System.out::println);
 
         System.out.println("Creamos los directorios");
         System.out.println("");
@@ -38,24 +43,31 @@ public class Programa {
             Files.createDirectory(appstsv);
             Files.createDirectory(appsxml);
             Files.createDirectory(appsjson);
-            Files.createDirectory(appsjson);
+            Files.createDirectory(c);
             Files.createDirectory(aplicaciones);
         } catch (IOException e) {
             System.out.println("Problema creando el directorio.");
             System.out.println(e.toString());
         }
 
-        String destinoArchivoTSV = "./appstsv/aplicaciones.tsv";
-        String destinoArchivoXML = "./appsxml/aplicaciones.xml";
-        String destinoArchivoJSON = "./appsjson/aplicaciones.json";
-        
-        
-        System.out.println("Creamos los archivos de cada uno de los tipos");
+        System.out.println("Creamos el archivos TSV");
         System.out.println("");
+        String destinoArchivoTSV = "./appstsv/aplicaciones.tsv";
         ServicioFicheroTSV.crearArchivosTSV(listaApps, destinoArchivoTSV);
-        ServicioFicheroXML.crearArchivosXML(listaApps, destinoArchivoXML);
+
+        System.out.println("Creamos el archivos XML");
+        System.out.println("");
+        String destinoArchivoXML = "./appsxml/aplicaciones.xml";
+        ServicioFicheroXML.crearArchivoXMLMarshall(listaApps, destinoArchivoXML);
+
+        System.out.println("Creamos el archivos JSON");
+        System.out.println("");
+        String destinoArchivoJSON = "./appsjson/aplicaciones.json";
         ServicioFicheroJSON.crearArchivosJSON(listaApps, destinoArchivoJSON);
         
-        
+        System.out.println("Creamos un archivos JSON por cada aplicacion");
+        System.out.println("");
+        String rutaAppsJSON = "./aplicaciones";
+        ServicioFicheroJSON.crearJSONporApp(listaApps, rutaAppsJSON);
     }
 }

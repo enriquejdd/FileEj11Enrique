@@ -5,10 +5,11 @@
  */
 package filesej11enriquediaz;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 /**
  *
@@ -16,36 +17,24 @@ import java.util.ArrayList;
  */
 public class ServicioFicheroXML {
 
-    public static void crearArchivosXML(ArrayList<App> arrayListApps, String rutaYNombreArchivo) {
+    // Crea un archivo XML usando Marshall en la ubicacion de la ruta para el archivo con los datos del array
+    public static void crearArchivoXMLMarshall(ArrayList<App> arrayListAppsXML, String rutaArchivo) throws JAXBException {
+        
+        AppXML apps = new AppXML();
+        apps.setLista(arrayListAppsXML);
+        // Crea el contexto JAXB. Se encarga de definir los objetos 
+        // que vamos a guardar.
+        JAXBContext contexto = JAXBContext.newInstance(AppXML.class);
 
-        try (BufferedWriter flujo = new BufferedWriter(new FileWriter(rutaYNombreArchivo))) {
-            String respuesta = "";
-            for (int i = 0; i < arrayListApps.size(); i++) {
-                respuesta = arrayListApps.get(i).toString();
-                flujo.newLine();
-                flujo.write(respuesta);
-            }
+        // Crear un objeto Marshaller, que sirve para generar la estructura del fichero XML
+        Marshaller serializador = contexto.createMarshaller();
 
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+        // Especificamos que la propiedad del formato de salida
+        // del serializador sea true, lo que implica que el formato se 
+        // realiza con indentación y saltos de línea
+        serializador.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+        // Volcado al fichero xml
+        serializador.marshal(apps, new File(rutaArchivo));
     }
-
-    public static ArrayList<App> crearListaAppsXML(int numeroApps) {
-        ArrayList<App> listaAplicaciones = new ArrayList<>();
-        for (int i = 0; i < numeroApps; i++) {
-            listaAplicaciones.add(App.crearAppAleatoria());
-        }
-        return listaAplicaciones;
-    }
-
-    // Prueba de funcionamiento
-//    public static void main(String[] args) {
-//        String destinoArchivo = "./ficheroTSV.xml";
-//        int numeroApps = 15;
-//        ArrayList<App> listaAplicaciones = crearListaAppsTSV(numeroApps);
-//        
-////        listaAplicaciones.forEach(System.out::println);
-//        crearArchivosTSV(listaAplicaciones, destinoArchivo);
-//    }
 }
