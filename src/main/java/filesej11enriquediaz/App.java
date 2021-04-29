@@ -9,11 +9,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
  * @author Enrique
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 public class App {
 
     private final static Random aleatorio = new Random();
@@ -23,6 +27,7 @@ public class App {
     private String nombre;
     private String descripcion;
     private Double tamanioKB;
+    @XmlJavaTypeAdapter(value = LocalDateAdaptador.class)
     private LocalDate fecCreacion;
 
     public App() {

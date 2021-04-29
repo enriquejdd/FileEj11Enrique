@@ -10,8 +10,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.PropertyException;
 
 /**
  *
@@ -19,7 +20,7 @@ import javax.xml.bind.PropertyException;
  */
 public class Programa {
 
-    public static void main(String[] args) throws IOException, PropertyException, JAXBException {
+    public static void main(String[] args) {
         int numeroApps = 50;
 
         System.out.println("Creamos las listas de aplicaciones");
@@ -58,16 +59,32 @@ public class Programa {
         System.out.println("Creamos el archivos XML");
         System.out.println("");
         String destinoArchivoXML = "./appsxml/aplicaciones.xml";
-        ServicioFicheroXML.crearArchivoXMLMarshall(listaApps, destinoArchivoXML);
+        try {
+            ServicioFicheroXML.crearArchivoXMLMarshall(listaApps, destinoArchivoXML);
+        } catch (JAXBException ex) {
+            Logger.getLogger(Programa.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         System.out.println("Creamos el archivos JSON");
         System.out.println("");
         String destinoArchivoJSON = "./appsjson/aplicaciones.json";
-        ServicioFicheroJSON.crearArchivosJSON(listaApps, destinoArchivoJSON);
-        
+        try {
+            ServicioFicheroJSON.crearArchivosJSON(listaApps, destinoArchivoJSON);
+        } catch (IOException ex) {
+            Logger.getLogger(Programa.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         System.out.println("Creamos un archivos JSON por cada aplicacion");
         System.out.println("");
         String rutaAppsJSON = "./aplicaciones";
-        ServicioFicheroJSON.crearJSONporApp(listaApps, rutaAppsJSON);
+
+        for (int i = 0; i < listaApps.size(); i++) {
+            try {
+                ServicioFicheroJSON.crearListaJSONporApp(listaApps.get(i), rutaAppsJSON);
+            } catch (IOException ex) {
+                Logger.getLogger(Programa.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
     }
 }
